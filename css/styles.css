@@ -1,0 +1,58 @@
+.navbar-custom {
+    background-color: #2c3e50;
+}
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: #ecf0f1;
+}
+.navbar-custom .nav-link:hover {
+    color: #000000;
+}
+
+/* 卡片動畫效果 */
+.card {
+    transition: transform 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ccdcec;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* 倒數計時器樣式 */
+.alert-info {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 1.2rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}
+
+/* 徽章樣式 */
+.badge {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.9rem;
+}
+
+.youon-card:hover {
+    transform: scale(0.7.0.7);
+    transition: transform 0.2s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 響應式調整 */
+@media (max-width: 576px) {
+    .card {
+        margin: 0 auto;
+        max-width: 90%;
+    }
+}
+.img-fluid {
+    max-height: 300px; /* Adjust max height */
+    object-fit: cover; /* Ensure image fits nicely */
+}
+.footer{
+     background-color: #2c3e50;
+}

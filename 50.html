@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>funky的日文筆記 - 五十音</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .youon-card {
+            min-height: 150px; /* 確保卡片高度一致 */
+        }
+        .youon-container {
+            padding: 0; /* 移除內邊距以占滿寬度 */
+        }
+        .youon-row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .youon-row .col {
+            padding: 5px; /* 減少卡片間距 */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">五十音</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="50.html">五十音</a></li>
+                    <li class="nav-item"><a class="nav-link" href="word.html">單字</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">文法</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">好笑的</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="text-center">五十音</h1>
+        <div id="countdown" class="text-center mb-4 alert alert-info"></div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <img src="img/長尾山雀.jfif" class="img-fluid rounded" alt="日文學習圖片">
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="card p-3">
+                    <h3>他是長尾山雀</h3>
+                    <p>這是一張可愛的長尾山雀<br>他在這邊鼓勵你。使用這張圖片來激發你的學習動力！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 平假名清音 -->
+        <h2 class="text-center mb-3">平假名清音</h2>
+        <div class="row row-cols-1 row-cols-md-5 g-3 mb-5">
+            <!-- あ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">あ</h5><p class="card-text">a</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">い</h5><p class="card-text">i</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">う</h5><p class="card-text">u</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">え</h5><p class="card-text">e</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">お</h5><p class="card-text">o</p></div></div></div>
+            <!-- か行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">か</h5><p class="card-text">ka</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">き</h5><p class="card-text">ki</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">く</h5><p class="card-text">ku</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">け</h5><p class="card-text">ke</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">こ</h5><p class="card-text">ko</p></div></div></div>
+            <!-- さ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">さ</h5><p class="card-text">sa</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">し</h5><p class="card-text">shi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">す</h5><p class="card-text">su</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">せ</h5><p class="card-text">se</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">そ</h5><p class="card-text">so</p></div></div></div>
+            <!-- た行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">た</h5><p class="card-text">ta</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ち</h5><p class="card-text">chi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">つ</h5><p class="card-text">tsu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">て</h5><p class="card-text">te</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">と</h5><p class="card-text">to</p></div></div></div>
+            <!-- な行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">な</h5><p class="card-text">na</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">に</h5><p class="card-text">ni</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぬ</h5><p class="card-text">nu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ね</h5><p class="card-text">ne</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">の</h5><p class="card-text">no</p></div></div></div>
+            <!-- は行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">は</h5><p class="card-text">ha</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ひ</h5><p class="card-text">hi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ふ</h5><p class="card-text">fu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">へ</h5><p class="card-text">he</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ほ</h5><p class="card-text">ho</p></div></div></div>
+            <!-- ま行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ま</h5><p class="card-text">ma</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">み</h5><p class="card-text">mi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">む</h5><p class="card-text">mu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">め</h5><p class="card-text">me</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">も</h5><p class="card-text">mo</p></div></div></div>
+            <!-- や行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">や</h5><p class="card-text">ya</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ゆ</h5><p class="card-text">yu</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">よ</h5><p class="card-text">yo</p></div></div></div>
+            <!-- ら行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ら</h5><p class="card-text">ra</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">り</h5><p class="card-text">ri</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">る</h5><p class="card-text">ru</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">れ</h5><p class="card-text">re</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ろ</h5><p class="card-text">ro</p></div></div></div>
+            <!-- わ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">わ</h5><p class="card-text">wa</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">を</h5><p class="card-text">wo</p></div></div></div>
+            <!-- ん -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ん</h5><p class="card-text">n</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+        </div>
+
+        <!-- 片假名清音 -->
+        <h2 class="text-center mb-3">片假名清音</h2>
+        <div class="row row-cols-1 row-cols-md-5 g-3 mb-5">
+            <!-- ア行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ア</h5><p class="card-text">a</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">イ</h5><p class="card-text">i</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ウ</h5><p class="card-text">u</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">エ</h5><p class="card-text">e</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">オ</h5><p class="card-text">o</p></div></div></div>
+            <!-- カ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">カ</h5><p class="card-text">ka</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">キ</h5><p class="card-text">ki</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ク</h5><p class="card-text">ku</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ケ</h5><p class="card-text">ke</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">コ</h5><p class="card-text">ko</p></div></div></div>
+            <!-- サ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">サ</h5><p class="card-text">sa</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">シ</h5><p class="card-text">shi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ス</h5><p class="card-text">su</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">セ</h5><p class="card-text">se</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ソ</h5><p class="card-text">so</p></div></div></div>
+            <!-- タ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">タ</h5><p class="card-text">ta</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">チ</h5><p class="card-text">chi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ツ</h5><p class="card-text">tsu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">テ</h5><p class="card-text">te</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ト</h5><p class="card-text">to</p></div></div></div>
+            <!-- ナ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ナ</h5><p class="card-text">na</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ニ</h5><p class="card-text">ni</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヌ</h5><p class="card-text">nu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ネ</h5><p class="card-text">ne</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ノ</h5><p class="card-text">no</p></div></div></div>
+            <!-- ハ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ハ</h5><p class="card-text">ha</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヒ</h5><p class="card-text">hi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">フ</h5><p class="card-text">fu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヘ</h5><p class="card-text">he</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ホ</h5><p class="card-text">ho</p></div></div></div>
+            <!-- マ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">マ</h5><p class="card-text">ma</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ミ</h5><p class="card-text">mi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ム</h5><p class="card-text">mu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">メ</h5><p class="card-text">me</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">モ</h5><p class="card-text">mo</p></div></div></div>
+            <!-- ヤ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヤ</h5><p class="card-text">ya</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ユ</h5><p class="card-text">yu</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヨ</h5><p class="card-text">yo</p></div></div></div>
+            <!-- ラ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ラ</h5><p class="card-text">ra</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">リ</h5><p class="card-text">ri</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ル</h5><p class="card-text">ru</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">レ</h5><p class="card-text">re</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ロ</h5><p class="card-text">ro</p></div></div></div>
+            <!-- ワ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ワ</h5><p class="card-text">wa</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヲ</h5><p class="card-text">wo</p></div></div></div>
+            <!-- ン -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ン</h5><p class="card-text">n</p></div></div></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+        </div>
+
+        <!-- 濁音與半濁音 -->
+        <h2 class="text-center mb-3">濁音與半濁音</h2>
+        <div class="row row-cols-1 row-cols-md-5 g-3 mb-5">
+            <!-- が行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">が</h5><p class="card-text">ga</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぎ</h5><p class="card-text">gi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぐ</h5><p class="card-text">gu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">げ</h5><p class="card-text">ge</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ご</h5><p class="card-text">go</p></div></div></div>
+            <!-- ざ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ざ</h5><p class="card-text">za</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">じ</h5><p class="card-text">ji</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ず</h5><p class="card-text">zu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぜ</h5><p class="card-text">ze</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぞ</h5><p class="card-text">zo</p></div></div></div>
+            <!-- だ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">だ</h5><p class="card-text">da</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぢ</h5><p class="card-text">ji</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">づ</h5><p class="card-text">zu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">で</h5><p class="card-text">de</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ど</h5><p class="card-text">do</p></div></div></div>
+            <!-- ば行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ば</h5><p class="card-text">ba</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">び</h5><p class="card-text">bi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぶ</h5><p class="card-text">bu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">べ</h5><p class="card-text">be</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぼ</h5><p class="card-text">bo</p></div></div></div>
+            <!-- ぱ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぱ</h5><p class="card-text">pa</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぴ</h5><p class="card-text">pi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぷ</h5><p class="card-text">pu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぺ</h5><p class="card-text">pe</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ぽ</h5><p class="card-text">po</p></div></div></div>
+            <!-- 片假名濁音 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ガ</h5><p class="card-text">ga</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ギ</h5><p class="card-text">gi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">グ</h5><p class="card-text">gu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ゲ</h5><p class="card-text">ge</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ゴ</h5><p class="card-text">go</p></div></div></div>
+            <!-- ザ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ザ</h5><p class="card-text">za</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ジ</h5><p class="card-text">ji</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ズ</h5><p class="card-text">zu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ゼ</h5><p class="card-text">ze</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ゾ</h5><p class="card-text">zo</p></div></div></div>
+            <!-- ダ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ダ</h5><p class="card-text">da</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヂ</h5><p class="card-text">ji</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ヅ</h5><p class="card-text">zu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">デ</h5><p class="card-text">de</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ド</h5><p class="card-text">do</p></div></div></div>
+            <!-- バ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">バ</h5><p class="card-text">ba</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ビ</h5><p class="card-text">bi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ブ</h5><p class="card-text">bu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ベ</h5><p class="card-text">be</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ボ</h5><p class="card-text">bo</p></div></div></div>
+            <!-- パ行 -->
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">パ</h5><p class="card-text">pa</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ピ</h5><p class="card-text">pi</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">プ</h5><p class="card-text">pu</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ペ</h5><p class="card-text">pe</p></div></div></div>
+            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">ポ</h5><p class="card-text">po</p></div></div></div>
+        </div>
+
+        <!-- 拗音 -->
+        <h2 class="text-center mb-3">拗音</h2>
+        <div class="container-fluid youon-container">
+            <div class="row row-cols-1 row-cols-md-3 g-3 youon-row">
+                <!-- きゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">きゃ</h5><p class="card-text">kya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">きゅ</h5><p class="card-text">kyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">きょ</h5><p class="card-text">kyo</p></div></div></div>
+                <!-- ぎゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ぎゃ</h5><p class="card-text">gya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ぎゅ</h5><p class="card-text">gyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ぎょ</h5><p class="card-text">gyo</p></div></div></div>
+                <!-- しゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">しゃ</h5><p class="card-text">sha</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">しゅ</h5><p class="card-text">shu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">しょ</h5><p class="card-text">sho</p></div></div></div>
+                <!-- じゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">じゃ</h5><p class="card-text">ja</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">じゅ</h5><p class="card-text">ju</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">じょ</h5><p class="card-text">jo</p></div></div></div>
+                <!-- ちゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ちゃ</h5><p class="card-text">cha</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ちゅ</h5><p class="card-text">chu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ちょ</h5><p class="card-text">cho</p></div></div></div>
+                <!-- にゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">にゃ</h5><p class="card-text">nya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">にゅ</h5><p class="card-text">nyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">にょ</h5><p class="card-text">nyo</p></div></div></div>
+                <!-- ひゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ひゃ</h5><p class="card-text">hya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ひゅ</h5><p class="card-text">hyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ひょ</h5><p class="card-text">hyo</p></div></div></div>
+                <!-- びゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">びゃ</h5><p class="card-text">bya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">びゅ</h5><p class="card-text">byu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">びょ</h5><p class="card-text">byo</p></div></div></div>
+                <!-- ぴゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ぴゃ</h5><p class="card-text">pya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ぴゅ</h5><p class="card-text">pyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ぴょ</h5><p class="card-text">pyo</p></div></div></div>
+                <!-- みゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">みゃ</h5><p class="card-text">mya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">みゅ</h5><p class="card-text">myu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">みょ</h5><p class="card-text">myo</p></div></div></div>
+                <!-- りゃ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">りゃ</h5><p class="card-text">rya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">りゅ</h5><p class="card-text">ryu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">りょ</h5><p class="card-text">ryo</p></div></div></div>
+                <!-- 片假名拗音 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">キャ</h5><p class="card-text">kya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">キュ</h5><p class="card-text">kyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">キョ</h5><p class="card-text">kyo</p></div></div></div>
+                <!-- ギャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ギャ</h5><p class="card-text">gya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ギュ</h5><p class="card-text">gyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ギョ</h5><p class="card-text">gyo</p></div></div></div>
+                <!-- シャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">シャ</h5><p class="card-text">sha</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">シュ</h5><p class="card-text">shu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ショ</h5><p class="card-text">sho</p></div></div></div>
+                <!-- ジャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ジャ</h5><p class="card-text">ja</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ジュ</h5><p class="card-text">ju</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ジョ</h5><p class="card-text">jo</p></div></div></div>
+                <!-- チャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">チャ</h5><p class="card-text">cha</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">チュ</h5><p class="card-text">chu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">チョ</h5><p class="card-text">cho</p></div></div></div>
+                <!-- ニャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ニャ</h5><p class="card-text">nya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ニュ</h5><p class="card-text">nyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ニョ</h5><p class="card-text">nyo</p></div></div></div>
+                <!-- ヒャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ヒャ</h5><p class="card-text">hya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ヒュ</h5><p class="card-text">hyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ヒョ</h5><p class="card-text">hyo</p></div></div></div>
+                <!-- ビャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ビャ</h5><p class="card-text">bya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ビュ</h5><p class="card-text">byu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ビョ</h5><p class="card-text">byo</p></div></div></div>
+                <!-- ピャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ピャ</h5><p class="card-text">pya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ピュ</h5><p class="card-text">pyu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ピョ</h5><p class="card-text">pyo</p></div></div></div>
+                <!-- ミャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ミャ</h5><p class="card-text">mya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ミュ</h5><p class="card-text">myu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">ミョ</h5><p class="card-text">myo</p></div></div></div>
+                <!-- リャ行 -->
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">リャ</h5><p class="card-text">rya</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">リュ</h5><p class="card-text">ryu</p></div></div></div>
+                <div class="col"><div class="card text-center h-100 youon-card"><div class="card-body"><h5 class="card-title">リョ</h5><p class="card-text">ryo</p></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-3 mt-5">
+        <p>&copy; 2025 funky的日文筆記 | 所有權利保留 | <a href="mailto:alanandy010@email.com">聯絡我</a></p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

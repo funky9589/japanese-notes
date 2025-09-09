@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "japanese": "猫",
+        "chinese": "貓",
+        "romaji": "neko",
+        "example": "猫が好きです。(Neko ga suki desu.) 我喜歡貓。"
+    },
+    {
+        "id": 2,
+        "japanese": "犬",
+        "chinese": "狗",
+        "romaji": "inu",
+        "example": "犬を散歩させます。(Inu o sanpo saseru.) 我帶狗去散步。"
+    },
+    {
+        "id": 3,
+        "japanese": "本",
+        "chinese": "書",
+        "romaji": "hon",
+        "example": "本を読みます。(Hon o yomimasu.) 我讀書。"
+    }
+]
