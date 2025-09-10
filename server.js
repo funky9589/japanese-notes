@@ -437,4 +437,111 @@ app.put('/api/funny/:id', async (req, res) => {
         }
 
         await initializeFile('funny.json');
-        let funny
+        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        const index = funny.findIndex(f => f.id === id);
+        if (index === -1) {
+            return res.status(404).json({ success: false, message: '小廢物不存在' });
+        }
+
+        funny[index] = { id, title, url, description: description || '' };
+        await fs.writeFile('funny.json', JSON.stringify(funny, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add funny.json');
+            await execPromise('git commit -m "Update funny" || true');
+
+            const { stdout: statusOutput } = await execPromise('git status --porcelain');
+            if (statusOutput) {
+                await execPromise('git stash || true');
+            }
+
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            const { stderr: pushError } = await execPromise('git push origin main');
+            if (pushError && !pushError.includes('Everything up-to-date')) {
+                throw new Error('Git push failed: ' + pushError);
+            }
+
+            if (statusOutput) {
+                await execPromise('git stash pop || true');
+            }
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_funny');
+        }
+
+        res.json({ success: true, funny: funny[index], gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'update_funny');
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
+
+// Delete funny
+app.delete('/api/funny/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        await initializeFile('funny.json');
+        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        const index = funny.findIndex(f => f.id === id);
+        if (index === -1) {
+            return res.status(404).json({ success: false, message: '小廢物不存在' });
+        }
+
+        funny.splice(index, 1);
+        await fs.writeFile('funny.json', JSON.stringify(funny, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add funny.json');
+            await execPromise('git commit -m "Delete funny" || true');
+
+            const { stdout: statusOutput } = await execPromise('git status --porcelain');
+            if (statusOutput) {
+                await execPromise('git stash || true');
+            }
+
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            const { stderr: pushError } = await execPromise('git push origin main');
+            if (pushError && !pushError.includes('Everything up-to-date')) {
+                throw new Error('Git push failed: ' + pushError);
+            }
+
+            if (statusOutput) {
+                await execPromise('git stash pop || true');
+            }
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_funny');
+        }
+
+        res.json({ success: true, gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'delete_funny');
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
+
+// 提供日誌端點
+app.get('/api/logs', async (req, res) => {
+    try {
+        const logs = await fs.readFile('error.log', 'utf8');
+        res.send(logs);
+    } catch (error) {
+        await logError(error, 'read_logs');
+        res.status(500).json({ success: false, message: '無法讀取日誌' });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
