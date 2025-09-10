@@ -43,7 +43,15 @@ app.get('/api/logs', async (req, res) => {
 app.get('/api/words', async (req, res) => {
     try {
         await initializeFile('words.json');
-        const words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
+        let content = await fs.readFile('words.json', 'utf8');
+        let words = [];
+        try {
+            words = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_words');
+            words = []; // 解析失敗時重置為空陣列
+            await fs.writeFile('words.json', '[]', 'utf8'); // 修復損壞檔案
+        }
         res.json(words);
     } catch (error) {
         await logError(error, 'read_words');
@@ -61,7 +69,15 @@ app.post('/api/words', async (req, res) => {
         }
 
         await initializeFile('words.json');
-        let words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
+        let content = await fs.readFile('words.json', 'utf8');
+        let words = [];
+        try {
+            words = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_words');
+            words = []; // 解析失敗時重置
+            await fs.writeFile('words.json', '[]', 'utf8'); // 修復
+        }
         const newId = words.length > 0 ? Math.max(...words.map(w => w.id)) + 1 : 1;
         const newWord = { id: newId, japanese, chinese, romaji, example: example || '' };
         words.push(newWord);
@@ -102,7 +118,15 @@ app.put('/api/words/:id', async (req, res) => {
         }
 
         await initializeFile('words.json');
-        let words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
+        let content = await fs.readFile('words.json', 'utf8');
+        let words = [];
+        try {
+            words = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_words');
+            words = [];
+            await fs.writeFile('words.json', '[]', 'utf8');
+        }
         const index = words.findIndex(w => w.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '單字不存在' });
@@ -141,7 +165,15 @@ app.delete('/api/words/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         await initializeFile('words.json');
-        let words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
+        let content = await fs.readFile('words.json', 'utf8');
+        let words = [];
+        try {
+            words = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_words');
+            words = [];
+            await fs.writeFile('words.json', '[]', 'utf8');
+        }
         const index = words.findIndex(w => w.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '單字不存在' });
@@ -179,7 +211,15 @@ app.delete('/api/words/:id', async (req, res) => {
 app.get('/api/grammar', async (req, res) => {
     try {
         await initializeFile('grammar.json');
-        const grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        let content = await fs.readFile('grammar.json', 'utf8');
+        let grammar = [];
+        try {
+            grammar = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_grammar');
+            grammar = [];
+            await fs.writeFile('grammar.json', '[]', 'utf8');
+        }
         res.json(grammar);
     } catch (error) {
         await logError(error, 'read_grammar');
@@ -197,7 +237,15 @@ app.post('/api/grammar', async (req, res) => {
         }
 
         await initializeFile('grammar.json');
-        let grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        let content = await fs.readFile('grammar.json', 'utf8');
+        let grammar = [];
+        try {
+            grammar = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_grammar');
+            grammar = [];
+            await fs.writeFile('grammar.json', '[]', 'utf8');
+        }
         const newId = grammar.length > 0 ? Math.max(...grammar.map(g => g.id)) + 1 : 1;
         const newGrammar = { id: newId, japanese, chinese, example: example || '' };
         grammar.push(newGrammar);
@@ -238,7 +286,15 @@ app.put('/api/grammar/:id', async (req, res) => {
         }
 
         await initializeFile('grammar.json');
-        let grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        let content = await fs.readFile('grammar.json', 'utf8');
+        let grammar = [];
+        try {
+            grammar = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_grammar');
+            grammar = [];
+            await fs.writeFile('grammar.json', '[]', 'utf8');
+        }
         const index = grammar.findIndex(g => g.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '文法不存在' });
@@ -277,7 +333,15 @@ app.delete('/api/grammar/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         await initializeFile('grammar.json');
-        let grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        let content = await fs.readFile('grammar.json', 'utf8');
+        let grammar = [];
+        try {
+            grammar = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_grammar');
+            grammar = [];
+            await fs.writeFile('grammar.json', '[]', 'utf8');
+        }
         const index = grammar.findIndex(g => g.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '文法不存在' });
@@ -315,7 +379,15 @@ app.delete('/api/grammar/:id', async (req, res) => {
 app.get('/api/funny', async (req, res) => {
     try {
         await initializeFile('funny.json');
-        const funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        let content = await fs.readFile('funny.json', 'utf8');
+        let funny = [];
+        try {
+            funny = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_funny');
+            funny = [];
+            await fs.writeFile('funny.json', '[]', 'utf8');
+        }
         res.json(funny);
     } catch (error) {
         await logError(error, 'read_funny');
@@ -333,7 +405,15 @@ app.post('/api/funny', async (req, res) => {
         }
 
         await initializeFile('funny.json');
-        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        let content = await fs.readFile('funny.json', 'utf8');
+        let funny = [];
+        try {
+            funny = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_funny');
+            funny = [];
+            await fs.writeFile('funny.json', '[]', 'utf8');
+        }
         const newId = funny.length > 0 ? Math.max(...funny.map(f => f.id)) + 1 : 1;
         const newFunny = { id: newId, title, url, description: description || '' };
         funny.push(newFunny);
@@ -374,7 +454,15 @@ app.put('/api/funny/:id', async (req, res) => {
         }
 
         await initializeFile('funny.json');
-        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        let content = await fs.readFile('funny.json', 'utf8');
+        let funny = [];
+        try {
+            funny = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_funny');
+            funny = [];
+            await fs.writeFile('funny.json', '[]', 'utf8');
+        }
         const index = funny.findIndex(f => f.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '小廢物不存在' });
@@ -413,7 +501,15 @@ app.delete('/api/funny/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         await initializeFile('funny.json');
-        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        let content = await fs.readFile('funny.json', 'utf8');
+        let funny = [];
+        try {
+            funny = JSON.parse(content || '[]');
+        } catch (parseError) {
+            await logError(parseError, 'parse_funny');
+            funny = [];
+            await fs.writeFile('funny.json', '[]', 'utf8');
+        }
         const index = funny.findIndex(f => f.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '小廢物不存在' });
