@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": 1,
+    "japanese": "猫",
+    "chinese": "貓",
+    "romaji": "我懶了",
+    "example": ""
+  }
+]
