@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 .then(data => {
                                     if (data.success) {
                                         loadData();
-                                        document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
+                                        document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！' + (data.gitSuccess ? '' : ' 但 Git 推送失敗，請檢查伺服器日誌。') + '</div>';
                                     } else {
                                         document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗：' + data.message + '</div>';
                                     }
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 if (data.success) {
-                    formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！</div>`;
+                    formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！` + (data.gitSuccess !== undefined && !data.gitSuccess ? ' 但 Git 推送失敗，請檢查伺服器日誌。' : '') + '</div>';
                     loadData();
                     form.reset();
                     form.removeAttribute('data-edit-id');

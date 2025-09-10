@@ -53,7 +53,7 @@ app.post('/api/words', async (req, res) => {
         try {
             await execPromise('git init || true');
             await execPromise('git config user.name "Render Bot"');
-            await execPromise('git config user.email "alanandy010@gmail.com"'); // 更改為你的信箱
+            await execPromise('git config user.email "bot@render.com"');
             await execPromise('git add words.json');
             await execPromise('git commit -m "Add new word" || true');
             await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
@@ -63,6 +63,7 @@ app.post('/api/words', async (req, res) => {
         } catch (gitError) {
             await logError(gitError, 'git_push_words');
             console.error('Git 推送失敗 (words):', gitError);
+            // 即使 Git 推送失敗，仍返回成功以避免前端重試
         }
 
         res.json({ success: true, word: newWord });
@@ -101,7 +102,7 @@ app.put('/api/words/:id', async (req, res) => {
         try {
             await execPromise('git init || true');
             await execPromise('git config user.name "Render Bot"');
-            await execPromise('git config user.email "alanandy010@gmail.com"'); // 更改為你的信箱
+            await execPromise('git config user.email "bot@render.com"');
             await execPromise('git add words.json');
             await execPromise('git commit -m "Update word" || true');
             await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
@@ -144,7 +145,7 @@ app.delete('/api/words/:id', async (req, res) => {
         try {
             await execPromise('git init || true');
             await execPromise('git config user.name "Render Bot"');
-            await execPromise('git config user.email "alanandy010@gmail.com"'); // 更改為你的信箱
+            await execPromise('git config user.email "bot@render.com"');
             await execPromise('git add words.json');
             await execPromise('git commit -m "Delete word" || true');
             await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
