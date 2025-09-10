@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "title": "有趣的日文梗",
+        "url": "https://example.com/funny-japanese-meme",
+        "description": "一些日文小廢物圖片和影片"
+    },
+    {
+        "id": 2,
+        "title": "日文學習資源網站",
+        "url": "https://example.com/japanese-resources",
+        "description": "免費的日文學習工具和課程"
+    },
+    {
+        "id": 3,
+        "title": "日文搞笑影片",
+        "url": "https://youtube.com/funny-japanese-video",
+        "description": "日本綜藝節目的精華片段"
+    }
+]

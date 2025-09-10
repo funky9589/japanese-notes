@@ -15,11 +15,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 根據頁面確定資料來源和表單提交路徑
-    const isGrammarPage = window.location.pathname.includes('grammar.html');
-    const dataFile = isGrammarPage ? '/grammar.json' : '/words.json';
-    const apiEndpoint = isGrammarPage ? '/api/grammar' : '/api/words';
+    const path = window.location.pathname;
+    const isGrammarPage = path.includes('grammar.html');
+    const isFunnyPage = path.includes('Good-for-Nothing.html');
+    const dataFile = isGrammarPage ? '/grammar.json' : isFunnyPage ? '/Good-for-Nothing.json' : '/words.json';
+    const apiEndpoint = isGrammarPage ? '/api/grammar' : isFunnyPage ? '/api/funny' : '/api/words';
     const cardLabels = isGrammarPage ? 
         { title: '日文文法', subtitle: '中文解釋', example: '例句' } : 
+        isFunnyPage ? 
+        { title: '標題', subtitle: '連結', description: '描述' } : 
         { title: '日文', subtitle: '中文', example: '例句', romaji: '羅馬拼音' };
 
     // 載入資料並顯示
@@ -34,10 +38,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     card.innerHTML = `
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">${item.japanese}</h5>
-                                <p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${item.chinese}</p>
-                                ${isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${item.romaji}</p>`}
-                                <p class="card-text"><strong>${cardLabels.example}</strong>: ${item.example || '無'}</p>
+                                <h5 class="card-title">${item.title || item.japanese}</h5>
+                                ${isFunnyPage ? `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: <a href="${item.url}" target="_blank">${item.url}</a></p>` : `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${item.chinese}</p>`}
+                                ${isFunnyPage ? '' : isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${item.romaji}</p>`}
+                                <p class="card-text"><strong>${cardLabels.example || cardLabels.description}</strong>: ${item.example || item.description || '無'}</p>
                             </div>
                         </div>
                     `;
@@ -51,13 +55,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 處理表單提交
-    const form = document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm');
+    const formId = isGrammarPage ? 'grammarForm' : isFunnyPage ? 'funnyForm' : 'wordForm';
+    const form = document.getElementById(formId);
     const formFeedback = document.getElementById('formFeedback');
     if (form && formFeedback) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(form);
-            const newItem = {
+            const newItem = isFunnyPage ? {
+                title: formData.get('title'),
+                url: formData.get('url'),
+                description: formData.get('description')
+            } : {
                 japanese: formData.get('japanese'),
                 chinese: formData.get('chinese'),
                 ...(isGrammarPage ? {} : { romaji: formData.get('romaji') }),
@@ -78,10 +87,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     card.innerHTML = `
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">${newItem.japanese}</h5>
-                                <p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${newItem.chinese}</p>
-                                ${isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${newItem.romaji}</p>`}
-                                <p class="card-text"><strong>${cardLabels.example}</strong>: ${newItem.example || '無'}</p>
+                                <h5 class="card-title">${newItem.title || newItem.japanese}</h5>
+                                ${isFunnyPage ? `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: <a href="${newItem.url}" target="_blank">${newItem.url}</a></p>` : `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${newItem.chinese}</p>`}
+                                ${isFunnyPage ? '' : isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${newItem.romaji}</p>`}
+                                <p class="card-text"><strong>${cardLabels.example || cardLabels.description}</strong>: ${newItem.example || newItem.description || '無'}</p>
                             </div>
                         </div>
                     `;

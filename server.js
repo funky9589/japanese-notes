@@ -28,6 +28,16 @@ app.get('/api/grammar', async (req, res) => {
     }
 });
 
+// Load funny
+app.get('/api/funny', async (req, res) => {
+    try {
+        const funny = JSON.parse(await fs.readFile('Good-for-Nothing.json'));
+        res.json(funny);
+    } catch (error) {
+        res.status(500).json({ success: false, message: '無法讀取資源' });
+    }
+});
+
 // Add new word
 app.post('/api/words', async (req, res) => {
     try {
@@ -90,6 +100,39 @@ app.post('/api/grammar', async (req, res) => {
         res.json({ success: true, grammar: newGrammar });
     } catch (error) {
         console.error('提交錯誤 (grammar):', error);
+        res.status(500).json({ success: false, message: '伺服器錯誤' });
+    }
+});
+
+// Add new funny
+app.post('/api/funny', async (req, res) => {
+    try {
+        const { title, url, description } = req.body;
+        if (!title || !url) {
+            return res.status(400).json({ success: false, message: '缺少必要欄位' });
+        }
+
+        const funny = JSON.parse(await fs.readFile('Good-for-Nothing.json'));
+        const newId = funny.length > 0 ? Math.max(...funny.map(f => f.id)) + 1 : 1;
+        const newFunny = { id: newId, title, url, description: description || '' };
+        funny.push(newFunny);
+        await fs.writeFile('Good-for-Nothing.json', JSON.stringify(funny, null, 2));
+
+        // Push to GitHub
+        try {
+            await execPromise('git config user.name "Render Bot"');
+            await execPromise('git config user.email "bot@render.com"');
+            await execPromise('git add Good-for-Nothing.json');
+            await execPromise('git commit -m "Add new funny resource"');
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/YOUR_USERNAME/japanese-notes.git`);
+            await execPromise('git push origin main');
+        } catch (gitError) {
+            console.error('Git 推送失敗 (funny):', gitError);
+        }
+
+        res.json({ success: true, funny: newFunny });
+    } catch (error) {
+        console.error('提交錯誤 (funny):', error);
         res.status(500).json({ success: false, message: '伺服器錯誤' });
     }
 });
