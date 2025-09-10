@@ -14,22 +14,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     }
 
-    // 載入單字並顯示
+    // 根據頁面確定資料來源和表單提交路徑
+    const isGrammarPage = window.location.pathname.includes('grammar.html');
+    const dataFile = isGrammarPage ? '/grammar.json' : '/words.json';
+    const apiEndpoint = isGrammarPage ? '/api/grammar' : '/api/words';
+    const cardLabels = isGrammarPage ? 
+        { title: '日文文法', subtitle: '中文解釋', example: '例句' } : 
+        { title: '日文', subtitle: '中文', example: '例句', romaji: '羅馬拼音' };
+
+    // 載入資料並顯示
     const notesContainer = document.getElementById('notes-container');
     if (notesContainer) {
-        fetch('/words.json')
+        fetch(dataFile)
             .then(response => response.json())
-            .then(words => {
-                words.forEach(word => {
+            .then(items => {
+                items.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'col';
                     card.innerHTML = `
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">${word.japanese}</h5>
-                                <p class="card-text"><strong>中文</strong>: ${word.chinese}</p>
-                                <p class="card-text"><strong>羅馬拼音</strong>: ${word.romaji}</p>
-                                <p class="card-text"><strong>例句</strong>: ${word.example || '無'}</p>
+                                <h5 class="card-title">${item.japanese}</h5>
+                                <p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${item.chinese}</p>
+                                ${isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${item.romaji}</p>`}
+                                <p class="card-text"><strong>${cardLabels.example}</strong>: ${item.example || '無'}</p>
                             </div>
                         </div>
                     `;
@@ -37,48 +45,48 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             })
             .catch(error => {
-                console.error('載入單字失敗:', error);
-                notesContainer.innerHTML = '<p class="text-danger">無法載入單字，請稍後再試。</p>';
+                console.error('載入資料失敗:', error);
+                notesContainer.innerHTML = '<p class="text-danger">無法載入資料，請稍後再試。</p>';
             });
     }
 
     // 處理表單提交
-    const wordForm = document.getElementById('wordForm');
+    const form = document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm');
     const formFeedback = document.getElementById('formFeedback');
-    if (wordForm && formFeedback) {
-        wordForm.addEventListener('submit', function (e) {
+    if (form && formFeedback) {
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
-            const formData = new FormData(wordForm);
-            const newWord = {
+            const formData = new FormData(form);
+            const newItem = {
                 japanese: formData.get('japanese'),
                 chinese: formData.get('chinese'),
-                romaji: formData.get('romaji'),
+                ...(isGrammarPage ? {} : { romaji: formData.get('romaji') }),
                 example: formData.get('example')
             };
 
-            fetch('/api/words', {
+            fetch(apiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newWord)
+                body: JSON.stringify(newItem)
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    formFeedback.innerHTML = '<div class="alert alert-success">單字提交成功！</div>';
+                    formFeedback.innerHTML = '<div class="alert alert-success">提交成功！</div>';
                     const card = document.createElement('div');
                     card.className = 'col';
                     card.innerHTML = `
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">${newWord.japanese}</h5>
-                                <p class="card-text"><strong>中文</strong>: ${newWord.chinese}</p>
-                                <p class="card-text"><strong>羅馬拼音</strong>: ${newWord.romaji}</p>
-                                <p class="card-text"><strong>例句</strong>: ${newWord.example || '無'}</p>
+                                <h5 class="card-title">${newItem.japanese}</h5>
+                                <p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${newItem.chinese}</p>
+                                ${isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${newItem.romaji}</p>`}
+                                <p class="card-text"><strong>${cardLabels.example}</strong>: ${newItem.example || '無'}</p>
                             </div>
                         </div>
                     `;
                     notesContainer.prepend(card);
-                    wordForm.reset();
+                    form.reset();
                 } else {
                     formFeedback.innerHTML = '<div class="alert alert-danger">提交失敗：' + data.message + '</div>';
                 }

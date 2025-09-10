@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "japanese": "～てしまう",
+        "chinese": "表示不小心或完成某事",
+        "example": "宿題を忘れてしまった。(Shukudai o wasurete shimatta.) 作業忘了做。"
+    },
+    {
+        "id": 2,
+        "japanese": "～ながら",
+        "chinese": "表示同時進行兩個動作",
+        "example": "音楽を聴きながら勉強します。(Ongaku o kikinagara benkyou shimasu.) 一邊聽音樂一邊學習。"
+    },
+    {
+        "id": 3,
+        "japanese": "～なければならない",
+        "chinese": "表示必須做某事",
+        "example": "毎日練習しなければならない。(Mainichi renshuu shinakereba naranai.) 必須每天練習。"
+    }
+]
