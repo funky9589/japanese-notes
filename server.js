@@ -17,7 +17,18 @@ const logError = async (error, type) => {
     }
 };
 
-// 提供日誌端點（僅限開發使用，需添加安全措施）
+// 初始化或檢查檔案
+const initializeFile = async (filename) => {
+    try {
+        await fs.access(filename);
+    } catch {
+        await fs.writeFile(filename, '[]', 'utf8');
+        await execPromise('git add ' + filename + ' || true');
+        await execPromise('git commit -m "Initialize ' + filename + '" || true');
+    }
+};
+
+// 提供日誌端點
 app.get('/api/logs', async (req, res) => {
     try {
         const logs = await fs.readFile('error.log', 'utf8');
@@ -31,6 +42,7 @@ app.get('/api/logs', async (req, res) => {
 // Load words
 app.get('/api/words', async (req, res) => {
     try {
+        await initializeFile('words.json');
         const words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
         res.json(words);
     } catch (error) {
@@ -48,13 +60,8 @@ app.post('/api/words', async (req, res) => {
             return res.status(400).json({ success: false, message: '缺少必要欄位: japanese, chinese, romaji' });
         }
 
-        let words = [];
-        try {
-            words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
-        } catch (parseError) {
-            await logError(parseError, 'parse_words');
-            words = [];
-        }
+        await initializeFile('words.json');
+        let words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
         const newId = words.length > 0 ? Math.max(...words.map(w => w.id)) + 1 : 1;
         const newWord = { id: newId, japanese, chinese, romaji, example: example || '' };
         words.push(newWord);
@@ -63,13 +70,13 @@ app.post('/api/words', async (req, res) => {
         let gitSuccess = true;
         try {
             await execPromise('git init || true');
-            await execPromise('git config user.name "funky9589"'); // 使用你的 GitHub 名稱
+            await execPromise('git config user.name "funky9589"');
             await execPromise('git config user.email "alanandy010@gmail.com"');
             await execPromise('git add words.json');
             await execPromise('git commit -m "Add new word" || true');
             await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
             await execPromise('git fetch origin');
-            await execPromise('git pull origin main --rebase || true'); // 容錯處理衝突
+            await execPromise('git pull origin main --rebase || true');
             await execPromise('git push origin main');
         } catch (gitError) {
             gitSuccess = false;
@@ -94,13 +101,8 @@ app.put('/api/words/:id', async (req, res) => {
             return res.status(400).json({ success: false, message: '缺少必要欄位: japanese, chinese, romaji' });
         }
 
-        let words = [];
-        try {
-            words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
-        } catch (parseError) {
-            await logError(parseError, 'parse_words');
-            words = [];
-        }
+        await initializeFile('words.json');
+        let words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
         const index = words.findIndex(w => w.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '單字不存在' });
@@ -138,13 +140,8 @@ app.put('/api/words/:id', async (req, res) => {
 app.delete('/api/words/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        let words = [];
-        try {
-            words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
-        } catch (parseError) {
-            await logError(parseError, 'parse_words');
-            words = [];
-        }
+        await initializeFile('words.json');
+        let words = JSON.parse(await fs.readFile('words.json', 'utf8') || '[]');
         const index = words.findIndex(w => w.id === id);
         if (index === -1) {
             return res.status(404).json({ success: false, message: '單字不存在' });
@@ -178,7 +175,277 @@ app.delete('/api/words/:id', async (req, res) => {
     }
 });
 
-// 其他端點 (grammar, funny) 保持不變，僅展示 /api/words 相關修改
+// Load grammar
+app.get('/api/grammar', async (req, res) => {
+    try {
+        await initializeFile('grammar.json');
+        const grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        res.json(grammar);
+    } catch (error) {
+        await logError(error, 'read_grammar');
+        console.error('讀取文法失敗:', error);
+        res.status(500).json({ success: false, message: '無法讀取文法' });
+    }
+});
+
+// Add new grammar
+app.post('/api/grammar', async (req, res) => {
+    try {
+        const { japanese, chinese, example } = req.body;
+        if (!japanese || !chinese) {
+            return res.status(400).json({ success: false, message: '缺少必要欄位: japanese, chinese' });
+        }
+
+        await initializeFile('grammar.json');
+        let grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        const newId = grammar.length > 0 ? Math.max(...grammar.map(g => g.id)) + 1 : 1;
+        const newGrammar = { id: newId, japanese, chinese, example: example || '' };
+        grammar.push(newGrammar);
+        await fs.writeFile('grammar.json', JSON.stringify(grammar, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add grammar.json');
+            await execPromise('git commit -m "Add new grammar" || true');
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            await execPromise('git push origin main');
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_grammar');
+            console.error('Git 推送失敗 (grammar):', gitError);
+        }
+
+        res.json({ success: true, grammar: newGrammar, gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'add_grammar');
+        console.error('提交文法錯誤:', error);
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
+
+// Update grammar
+app.put('/api/grammar/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { japanese, chinese, example } = req.body;
+        if (!japanese || !chinese) {
+            return res.status(400).json({ success: false, message: '缺少必要欄位: japanese, chinese' });
+        }
+
+        await initializeFile('grammar.json');
+        let grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        const index = grammar.findIndex(g => g.id === id);
+        if (index === -1) {
+            return res.status(404).json({ success: false, message: '文法不存在' });
+        }
+
+        grammar[index] = { id, japanese, chinese, example: example || '' };
+        await fs.writeFile('grammar.json', JSON.stringify(grammar, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add grammar.json');
+            await execPromise('git commit -m "Update grammar" || true');
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            await execPromise('git push origin main');
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_update_grammar');
+            console.error('Git 推送失敗 (update grammar):', gitError);
+        }
+
+        res.json({ success: true, grammar: grammar[index], gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'update_grammar');
+        console.error('更新文法錯誤:', error);
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
+
+// Delete grammar
+app.delete('/api/grammar/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        await initializeFile('grammar.json');
+        let grammar = JSON.parse(await fs.readFile('grammar.json', 'utf8') || '[]');
+        const index = grammar.findIndex(g => g.id === id);
+        if (index === -1) {
+            return res.status(404).json({ success: false, message: '文法不存在' });
+        }
+
+        grammar.splice(index, 1);
+        await fs.writeFile('grammar.json', JSON.stringify(grammar, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add grammar.json');
+            await execPromise('git commit -m "Delete grammar" || true');
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            await execPromise('git push origin main');
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_delete_grammar');
+            console.error('Git 推送失敗 (delete grammar):', gitError);
+        }
+
+        res.json({ success: true, gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'delete_grammar');
+        console.error('刪除文法錯誤:', error);
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
+
+// Load funny
+app.get('/api/funny', async (req, res) => {
+    try {
+        await initializeFile('funny.json');
+        const funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        res.json(funny);
+    } catch (error) {
+        await logError(error, 'read_funny');
+        console.error('讀取小廢物失敗:', error);
+        res.status(500).json({ success: false, message: '無法讀取小廢物' });
+    }
+});
+
+// Add new funny
+app.post('/api/funny', async (req, res) => {
+    try {
+        const { title, url, description } = req.body;
+        if (!title || !url) {
+            return res.status(400).json({ success: false, message: '缺少必要欄位: title, url' });
+        }
+
+        await initializeFile('funny.json');
+        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        const newId = funny.length > 0 ? Math.max(...funny.map(f => f.id)) + 1 : 1;
+        const newFunny = { id: newId, title, url, description: description || '' };
+        funny.push(newFunny);
+        await fs.writeFile('funny.json', JSON.stringify(funny, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add funny.json');
+            await execPromise('git commit -m "Add new funny" || true');
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            await execPromise('git push origin main');
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_funny');
+            console.error('Git 推送失敗 (funny):', gitError);
+        }
+
+        res.json({ success: true, funny: newFunny, gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'add_funny');
+        console.error('提交小廢物錯誤:', error);
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
+
+// Update funny
+app.put('/api/funny/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { title, url, description } = req.body;
+        if (!title || !url) {
+            return res.status(400).json({ success: false, message: '缺少必要欄位: title, url' });
+        }
+
+        await initializeFile('funny.json');
+        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        const index = funny.findIndex(f => f.id === id);
+        if (index === -1) {
+            return res.status(404).json({ success: false, message: '小廢物不存在' });
+        }
+
+        funny[index] = { id, title, url, description: description || '' };
+        await fs.writeFile('funny.json', JSON.stringify(funny, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add funny.json');
+            await execPromise('git commit -m "Update funny" || true');
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            await execPromise('git push origin main');
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_update_funny');
+            console.error('Git 推送失敗 (update funny):', gitError);
+        }
+
+        res.json({ success: true, funny: funny[index], gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'update_funny');
+        console.error('更新小廢物錯誤:', error);
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
+
+// Delete funny
+app.delete('/api/funny/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        await initializeFile('funny.json');
+        let funny = JSON.parse(await fs.readFile('funny.json', 'utf8') || '[]');
+        const index = funny.findIndex(f => f.id === id);
+        if (index === -1) {
+            return res.status(404).json({ success: false, message: '小廢物不存在' });
+        }
+
+        funny.splice(index, 1);
+        await fs.writeFile('funny.json', JSON.stringify(funny, null, 2), 'utf8');
+
+        let gitSuccess = true;
+        try {
+            await execPromise('git init || true');
+            await execPromise('git config user.name "funky9589"');
+            await execPromise('git config user.email "alanandy010@gmail.com"');
+            await execPromise('git add funny.json');
+            await execPromise('git commit -m "Delete funny" || true');
+            await execPromise(`git remote set-url origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git || git remote add origin https://${process.env.GIT_TOKEN}@github.com/funky9589/japanese-notes.git`);
+            await execPromise('git fetch origin');
+            await execPromise('git pull origin main --rebase || true');
+            await execPromise('git push origin main');
+        } catch (gitError) {
+            gitSuccess = false;
+            await logError(gitError, 'git_push_delete_funny');
+            console.error('Git 推送失敗 (delete funny):', gitError);
+        }
+
+        res.json({ success: true, gitSuccess: gitSuccess });
+    } catch (error) {
+        await logError(error, 'delete_funny');
+        console.error('刪除小廢物錯誤:', error);
+        res.status(500).json({ success: false, message: '伺服器錯誤: ' + error.message });
+    }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
