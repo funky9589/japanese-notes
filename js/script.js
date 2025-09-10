@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // 載入資料並顯示
     const notesContainer = document.getElementById('notes-container');
     const loadData = () => {
-        fetch(dataFile, { cache: 'no-store' }) // 禁用快取
+        fetch(dataFile, { cache: 'no-store' })
             .then(response => {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.json();
             })
             .then(items => {
-                notesContainer.innerHTML = ''; // 清空現有卡片
+                notesContainer.innerHTML = '';
                 items.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'col';
@@ -62,22 +62,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         const id = this.getAttribute('data-id');
                         const endpoint = isGrammarPage ? '/api/grammar' : '/api/words';
                         if (confirm('確定要刪除此項目？')) {
-                            fetch(`${endpoint}/${id}`, {
-                                method: 'DELETE'
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    loadData(); // 重新載入資料
-                                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
-                                } else {
-                                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗：' + data.message + '</div>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('刪除錯誤:', error);
-                                document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗，請檢查網路連線。</div>';
-                            });
+                            fetch(`${endpoint}/${id}`, { method: 'DELETE' })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        loadData();
+                                        document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
+                                    } else {
+                                        document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗：' + data.message + '</div>';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('刪除錯誤:', error);
+                                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗，請檢查網路連線。</div>';
+                                });
                         }
                     });
                 });
@@ -91,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         const romaji = this.getAttribute('data-romaji');
                         const example = this.getAttribute('data-example');
 
-                        // 填充表單
                         document.getElementById(isGrammarPage ? 'japanese' : 'japanese').value = japanese;
                         document.getElementById('chinese').value = chinese;
                         if (!isGrammarPage) document.getElementById('romaji').value = romaji;
@@ -107,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     if (notesContainer) {
-        loadData(); // 初次載入
+        loadData();
     }
 
     // 處理表單提交
@@ -139,20 +136,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newItem)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！</div>`;
-                    loadData(); // 重新載入資料
+                    loadData();
                     form.reset();
                     form.removeAttribute('data-edit-id');
                 } else {
-                    formFeedback.innerHTML = `<div class="alert alert-danger">${isEdit ? '編輯' : '提交'}失敗：` + data.message + '</div>';
+                    formFeedback.innerHTML = `<div class="alert alert-danger">${isEdit ? '編輯' : '提交'}失敗：${data.message || '未知錯誤'}</div>`;
                 }
             })
             .catch(error => {
                 console.error('提交錯誤:', error);
-                formFeedback.innerHTML = '<div class="alert alert-danger">提交失敗，請檢查網路連線。</div>';
+                formFeedback.innerHTML = '<div class="alert alert-danger">提交失敗，請檢查網路連線或伺服器狀態。</div>';
             });
         });
     }
