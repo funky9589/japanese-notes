@@ -28,10 +28,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 載入資料並顯示
     const notesContainer = document.getElementById('notes-container');
-    if (notesContainer) {
-        fetch(dataFile)
-            .then(response => response.json())
+    const loadData = () => {
+        fetch(dataFile, { cache: 'no-store' }) // 禁用快取
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.json();
+            })
             .then(items => {
+                notesContainer.innerHTML = ''; // 清空現有卡片
                 items.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'col';
@@ -64,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    this.closest('.col').remove();
+                                    loadData(); // 重新載入資料
                                     document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
                                 } else {
                                     document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗：' + data.message + '</div>';
@@ -92,10 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('chinese').value = chinese;
                         if (!isGrammarPage) document.getElementById('romaji').value = romaji;
                         document.getElementById('example').value = example;
-
-                        // 修改表單行為為編輯
-                        const form = document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm');
-                        form.setAttribute('data-edit-id', id);
+                        document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm').setAttribute('data-edit-id', id);
                     });
                 });
             })
@@ -103,6 +104,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('載入資料失敗:', error);
                 notesContainer.innerHTML = '<p class="text-danger">無法載入資料，請稍後再試。</p>';
             });
+    };
+
+    if (notesContainer) {
+        loadData(); // 初次載入
     }
 
     // 處理表單提交
@@ -138,67 +143,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.success) {
                     formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！</div>`;
-                    const card = document.createElement('div');
-                    card.className = 'col';
-                    card.innerHTML = `
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">${newItem.title || newItem.japanese}</h5>
-                                ${isFunnyPage ? `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: <a href="${newItem.url}" target="_blank">${newItem.url}</a></p>` : `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${newItem.chinese}</p>`}
-                                ${isFunnyPage ? '' : isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${newItem.romaji}</p>`}
-                                <p class="card-text"><strong>${cardLabels.example || cardLabels.description}</strong>: ${newItem.example || newItem.description || '無'}</p>
-                                ${!isFunnyPage ? `
-                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${data.word?.id || data.grammar?.id || editId}">刪除</button>
-                                    <button class="btn btn-warning btn-sm edit-btn" data-id="${data.word?.id || data.grammar?.id || editId}" data-japanese="${newItem.japanese}" data-chinese="${newItem.chinese}" data-romaji="${newItem.romaji || ''}" data-example="${newItem.example || ''}">編輯</button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                    if (isEdit) {
-                        const oldCard = document.querySelector(`.delete-btn[data-id="${editId}"]`).closest('.col');
-                        oldCard.replaceWith(card);
-                    } else {
-                        notesContainer.prepend(card);
-                    }
+                    loadData(); // 重新載入資料
                     form.reset();
                     form.removeAttribute('data-edit-id');
-
-                    // 為新卡片的按鈕添加事件監聽器
-                    card.querySelector('.delete-btn')?.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        if (confirm('確定要刪除此項目？')) {
-                            fetch(`${apiEndpoint}/${id}`, {
-                                method: 'DELETE'
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    this.closest('.col').remove();
-                                    formFeedback.innerHTML = '<div class="alert alert-success">刪除成功！</div>';
-                                } else {
-                                    formFeedback.innerHTML = '<div class="alert alert-danger">刪除失敗：' + data.message + '</div>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('刪除錯誤:', error);
-                                formFeedback.innerHTML = '<div class="alert alert-danger">刪除失敗，請檢查網路連線。</div>';
-                            });
-                        }
-                    });
-
-                    card.querySelector('.edit-btn')?.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        const japanese = this.getAttribute('data-japanese');
-                        const chinese = this.getAttribute('data-chinese');
-                        const romaji = this.getAttribute('data-romaji');
-                        const example = this.getAttribute('data-example');
-
-                        document.getElementById(isGrammarPage ? 'japanese' : 'japanese').value = japanese;
-                        document.getElementById('chinese').value = chinese;
-                        if (!isGrammarPage) document.getElementById('romaji').value = romaji;
-                        document.getElementById('example').value = example;
-                        form.setAttribute('data-edit-id', id);
-                    });
                 } else {
                     formFeedback.innerHTML = `<div class="alert alert-danger">${isEdit ? '編輯' : '提交'}失敗：` + data.message + '</div>';
                 }
