@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 if (data.success) {
-                    formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！` + (data.gitSuccess !== undefined && !data.gitSuccess ? ' 但 Git 推送失敗，請檢查伺服器日誌。' : '') + '</div>';
+                    formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！` + (data.gitSuccess !== undefined && !data.gitSuccess ? ' 但 Git 推送失敗，請檢查伺服器日誌 (<a href="/api/logs" target="_blank">查看</a>)。' : '') + '</div>';
                     loadData();
                     form.reset();
                     form.removeAttribute('data-edit-id');
