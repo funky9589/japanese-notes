@@ -1,0 +1,5 @@
+2025-09-10T16:50:56.543Z - git_push_words: Command failed: git pull origin main --rebase || true
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+'true' ���O�����Υ~���R�O�B�i���檺�{���Χ妸�ɡC
+
