@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const path = window.location.pathname;
     const isGrammarPage = path.includes('grammar.html');
     const isFunnyPage = path.includes('Good-for-Nothing.html');
-    const dataFile = isGrammarPage ? '/grammar.json' : isFunnyPage ? '/Good-for-Nothing.json' : '/words.json';
-    const apiEndpoint = isGrammarPage ? '/api/grammar' : isFunnyPage ? '/api/funny' : '/api/words';
+    const dataFile = isGrammarPage ? 'grammar.json' : isFunnyPage ? 'funny.json' : 'words.json';
     const cardLabels = isGrammarPage 
         ? { title: '日文文法', subtitle: '中文解釋', example: '例句' } 
         : isFunnyPage 
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 載入資料並顯示
     const notesContainer = document.getElementById('notes-container');
     const loadData = () => {
-        fetch(dataFile, { cache: 'no-store' })
+        fetch(dataFile)
             .then(response => {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.json();
@@ -60,22 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll('.delete-btn').forEach(button => {
                     button.addEventListener('click', function () {
                         const id = this.getAttribute('data-id');
-                        const endpoint = isGrammarPage ? '/api/grammar' : '/api/words';
                         if (confirm('確定要刪除此項目？')) {
-                            fetch(`${endpoint}/${id}`, { method: 'DELETE' })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        loadData();
-                                        document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！' + (data.gitSuccess ? '' : ' 但 Git 推送失敗，請檢查伺服器日誌。') + '</div>';
-                                    } else {
-                                        document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗：' + data.message + '</div>';
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('刪除錯誤:', error);
-                                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗，請檢查網路連線。</div>';
-                                });
+                            let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
+                            items = items.filter(item => item.id !== parseInt(id));
+                            localStorage.setItem(dataFile, JSON.stringify(items));
+                            loadData();
+                            document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
                         }
                     });
                 });
@@ -117,43 +106,34 @@ document.addEventListener('DOMContentLoaded', function () {
             const formData = new FormData(form);
             const editId = form.getAttribute('data-edit-id');
             const isEdit = !!editId;
-            const endpoint = isEdit ? `${apiEndpoint}/${editId}` : apiEndpoint;
-            const method = isEdit ? 'PUT' : 'POST';
+            let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
 
             const newItem = isFunnyPage ? {
+                id: editId || items.length + 1,
                 title: formData.get('title'),
                 url: formData.get('url'),
                 description: formData.get('description')
             } : {
+                id: editId || items.length + 1,
                 japanese: formData.get('japanese'),
                 chinese: formData.get('chinese'),
                 ...(isGrammarPage ? {} : { romaji: formData.get('romaji') }),
                 example: formData.get('example')
             };
 
-            fetch(endpoint, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newItem)
-            })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！` + (data.gitSuccess !== undefined && !data.gitSuccess ? ' 但 Git 推送失敗，請檢查伺服器日誌 (<a href="/api/logs" target="_blank">查看</a>)。' : '') + '</div>';
-                    loadData();
-                    form.reset();
-                    form.removeAttribute('data-edit-id');
-                } else {
-                    formFeedback.innerHTML = `<div class="alert alert-danger">${isEdit ? '編輯' : '提交'}失敗：${data.message || '未知錯誤'}</div>`;
-                }
-            })
-            .catch(error => {
-                console.error('提交錯誤:', error);
-                formFeedback.innerHTML = '<div class="alert alert-danger">提交失敗，請檢查網路連線或伺服器狀態。</div>';
-            });
+            if (isEdit) {
+                const index = items.findIndex(item => item.id === parseInt(editId));
+                if (index !== -1) items[index] = newItem;
+            } else {
+                items.push(newItem);
+            }
+
+            localStorage.setItem(dataFile, JSON.stringify(items));
+
+            formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！</div>`;
+            loadData();
+            form.reset();
+            form.removeAttribute('data-edit-id');
         });
     }
 });
