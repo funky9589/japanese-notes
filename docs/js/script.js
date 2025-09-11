@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const path = window.location.pathname;
     const isGrammarPage = path.includes('grammar.html');
     const isFunnyPage = path.includes('Good-for-Nothing.html');
-    const apiEndpoint = isGrammarPage ? '/api/grammar' : isFunnyPage ? '/api/funny' : '/api/words';
+    const dataFile = isGrammarPage ? 'grammar.json' : isFunnyPage ? 'funny.json' : 'words.json';
     const cardLabels = isGrammarPage 
         ? { title: '日文文法', subtitle: '中文解釋', example: '例句' } 
         : isFunnyPage 
@@ -28,94 +28,58 @@ document.addEventListener('DOMContentLoaded', function () {
     // 載入資料並顯示
     const notesContainer = document.getElementById('notes-container');
     const loadData = () => {
-        fetch(apiEndpoint)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(items => {
-                notesContainer.innerHTML = '';
-                items.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'col';
-                    card.innerHTML = `
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">${item.title || item.japanese}</h5>
-                                ${isFunnyPage ? `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: <a href="${item.url}" target="_blank">${item.url}</a></p>` : `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${item.chinese}</p>`}
-                                ${isFunnyPage ? '' : isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${item.romaji}</p>`}
-                                <p class="card-text"><strong>${cardLabels.example || cardLabels.description}</strong>: ${item.example || item.description || '無'}</p>
-                                ${!isFunnyPage ? `
-                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}">刪除</button>
-                                    <button class="btn btn-warning btn-sm edit-btn" data-id="${item.id}" data-japanese="${item.japanese}" data-chinese="${item.chinese}" data-romaji="${item.romaji || ''}" data-example="${item.example || ''}">編輯</button>
-                                ` : `
-                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}">刪除</button>
-                                    <button class="btn btn-warning btn-sm edit-btn" data-id="${item.id}" data-title="${item.title}" data-url="${item.url}" data-description="${item.description || ''}">編輯</button>
-                                `}
-                            </div>
-                        </div>
-                    `;
-                    notesContainer.appendChild(card);
-                });
+        let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
+        notesContainer.innerHTML = '';
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'col';
+            card.innerHTML = `
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.title || item.japanese}</h5>
+                        ${isFunnyPage ? `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: <a href="${item.url}" target="_blank">${item.url}</a></p>` : `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${item.chinese}</p>`}
+                        ${isFunnyPage ? '' : isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${item.romaji}</p>`}
+                        <p class="card-text"><strong>${cardLabels.example || cardLabels.description}</strong>: ${item.example || item.description || '無'}</p>
+                        ${!isFunnyPage ? `
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}">刪除</button>
+                            <button class="btn btn-warning btn-sm edit-btn" data-id="${item.id}" data-japanese="${item.japanese}" data-chinese="${item.chinese}" data-romaji="${item.romaji || ''}" data-example="${item.example || ''}">編輯</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            notesContainer.appendChild(card);
+        });
 
-                // 刪除事件監聽器
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        if (confirm('確定要刪除此項目？')) {
-                            fetch(apiEndpoint, {
-                                method: 'DELETE',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ id })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    loadData();
-                                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
-                                } else {
-                                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗</div>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('刪除錯誤:', error);
-                                document.getElementById('formFeedback').innerHTML = '<div class="alert alert-danger">刪除失敗，請檢查網路</div>';
-                            });
-                        }
-                    });
-                });
-
-                // 編輯事件監聽器
-                document.querySelectorAll('.edit-btn').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        const japanese = this.getAttribute('data-japanese');
-                        const chinese = this.getAttribute('data-chinese');
-                        const romaji = this.getAttribute('data-romaji');
-                        const example = this.getAttribute('data-example');
-                        const title = this.getAttribute('data-title');
-                        const url = this.getAttribute('data-url');
-                        const description = this.getAttribute('data-description');
-
-                        if (isFunnyPage) {
-                            document.getElementById('title').value = title;
-                            document.getElementById('url').value = url;
-                            document.getElementById('description').value = description;
-                            document.getElementById('funnyForm').setAttribute('data-edit-id', id);
-                        } else {
-                            document.getElementById(isGrammarPage ? 'japanese' : 'japanese').value = japanese || '';
-                            document.getElementById('chinese').value = chinese || '';
-                            if (!isGrammarPage) document.getElementById('romaji').value = romaji || '';
-                            document.getElementById('example').value = example || '';
-                            document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm').setAttribute('data-edit-id', id);
-                        }
-                    });
-                });
-            })
-            .catch(error => {
-                console.error('載入資料失敗:', error);
-                notesContainer.innerHTML = '<p class="text-danger">無法載入資料，請稍後再試</p>';
+        // 刪除事件監聽器
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                if (confirm('確定要刪除此項目？')) {
+                    let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
+                    items = items.filter(item => item.id !== parseInt(id));
+                    localStorage.setItem(dataFile, JSON.stringify(items));
+                    loadData();
+                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
+                }
             });
+        });
+
+        // 編輯事件監聽器
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const japanese = this.getAttribute('data-japanese');
+                const chinese = this.getAttribute('data-chinese');
+                const romaji = this.getAttribute('data-romaji');
+                const example = this.getAttribute('data-example');
+
+                document.getElementById(isGrammarPage ? 'japanese' : 'japanese').value = japanese;
+                document.getElementById('chinese').value = chinese;
+                if (!isGrammarPage) document.getElementById('romaji').value = romaji;
+                document.getElementById('example').value = example;
+                document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm').setAttribute('data-edit-id', id);
+            });
+        });
     };
 
     if (notesContainer) {
@@ -132,43 +96,34 @@ document.addEventListener('DOMContentLoaded', function () {
             const formData = new FormData(form);
             const editId = form.getAttribute('data-edit-id');
             const isEdit = !!editId;
-            const method = isEdit ? 'PUT' : 'POST';
-            const body = isFunnyPage ? {
-                id: editId,
+            let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
+
+            const newItem = isFunnyPage ? {
+                id: editId || items.length + 1,
                 title: formData.get('title'),
                 url: formData.get('url'),
                 description: formData.get('description')
             } : {
-                id: editId,
+                id: editId || items.length + 1,
                 japanese: formData.get('japanese'),
                 chinese: formData.get('chinese'),
                 ...(isGrammarPage ? {} : { romaji: formData.get('romaji') }),
                 example: formData.get('example')
             };
 
-            fetch(apiEndpoint, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success || !data.error) {
-                    formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！</div>`;
-                    loadData();
-                    form.reset();
-                    form.removeAttribute('data-edit-id');
-                } else {
-                    formFeedback.innerHTML = `<div class="alert alert-danger">${isEdit ? '編輯' : '提交'}失敗：${data.error}</div>`;
-                }
-            })
-            .catch(error => {
-                console.error('提交錯誤:', error);
-                formFeedback.innerHTML = '<div class="alert alert-danger">提交失敗，請檢查網路或伺服器</div>';
-            });
+            if (isEdit) {
+                const index = items.findIndex(item => item.id === parseInt(editId));
+                if (index !== -1) items[index] = newItem;
+            } else {
+                items.push(newItem);
+            }
+
+            localStorage.setItem(dataFile, JSON.stringify(items));
+
+            formFeedback.innerHTML = `<div class="alert alert-success">${isEdit ? '編輯' : '提交'}成功！</div>`;
+            loadData();
+            form.reset();
+            form.removeAttribute('data-edit-id');
         });
     }
 });
