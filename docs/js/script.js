@@ -28,68 +28,58 @@ document.addEventListener('DOMContentLoaded', function () {
     // 載入資料並顯示
     const notesContainer = document.getElementById('notes-container');
     const loadData = () => {
-        fetch(dataFile)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(items => {
-                notesContainer.innerHTML = '';
-                items.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'col';
-                    card.innerHTML = `
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">${item.title || item.japanese}</h5>
-                                ${isFunnyPage ? `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: <a href="${item.url}" target="_blank">${item.url}</a></p>` : `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${item.chinese}</p>`}
-                                ${isFunnyPage ? '' : isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${item.romaji}</p>`}
-                                <p class="card-text"><strong>${cardLabels.example || cardLabels.description}</strong>: ${item.example || item.description || '無'}</p>
-                                ${!isFunnyPage ? `
-                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}">刪除</button>
-                                    <button class="btn btn-warning btn-sm edit-btn" data-id="${item.id}" data-japanese="${item.japanese}" data-chinese="${item.chinese}" data-romaji="${item.romaji || ''}" data-example="${item.example || ''}">編輯</button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                    notesContainer.appendChild(card);
-                });
+        let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
+        notesContainer.innerHTML = '';
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'col';
+            card.innerHTML = `
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.title || item.japanese}</h5>
+                        ${isFunnyPage ? `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: <a href="${item.url}" target="_blank">${item.url}</a></p>` : `<p class="card-text"><strong>${cardLabels.subtitle}</strong>: ${item.chinese}</p>`}
+                        ${isFunnyPage ? '' : isGrammarPage ? '' : `<p class="card-text"><strong>${cardLabels.romaji}</strong>: ${item.romaji}</p>`}
+                        <p class="card-text"><strong>${cardLabels.example || cardLabels.description}</strong>: ${item.example || item.description || '無'}</p>
+                        ${!isFunnyPage ? `
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}">刪除</button>
+                            <button class="btn btn-warning btn-sm edit-btn" data-id="${item.id}" data-japanese="${item.japanese}" data-chinese="${item.chinese}" data-romaji="${item.romaji || ''}" data-example="${item.example || ''}">編輯</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            notesContainer.appendChild(card);
+        });
 
-                // 刪除事件監聽器
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        if (confirm('確定要刪除此項目？')) {
-                            let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
-                            items = items.filter(item => item.id !== parseInt(id));
-                            localStorage.setItem(dataFile, JSON.stringify(items));
-                            loadData();
-                            document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
-                        }
-                    });
-                });
-
-                // 編輯事件監聽器
-                document.querySelectorAll('.edit-btn').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        const japanese = this.getAttribute('data-japanese');
-                        const chinese = this.getAttribute('data-chinese');
-                        const romaji = this.getAttribute('data-romaji');
-                        const example = this.getAttribute('data-example');
-
-                        document.getElementById(isGrammarPage ? 'japanese' : 'japanese').value = japanese;
-                        document.getElementById('chinese').value = chinese;
-                        if (!isGrammarPage) document.getElementById('romaji').value = romaji;
-                        document.getElementById('example').value = example;
-                        document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm').setAttribute('data-edit-id', id);
-                    });
-                });
-            })
-            .catch(error => {
-                console.error('載入資料失敗:', error);
-                notesContainer.innerHTML = '<p class="text-danger">無法載入資料，請稍後再試。</p>';
+        // 刪除事件監聽器
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                if (confirm('確定要刪除此項目？')) {
+                    let items = JSON.parse(localStorage.getItem(dataFile) || '[]');
+                    items = items.filter(item => item.id !== parseInt(id));
+                    localStorage.setItem(dataFile, JSON.stringify(items));
+                    loadData();
+                    document.getElementById('formFeedback').innerHTML = '<div class="alert alert-success">刪除成功！</div>';
+                }
             });
+        });
+
+        // 編輯事件監聽器
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const japanese = this.getAttribute('data-japanese');
+                const chinese = this.getAttribute('data-chinese');
+                const romaji = this.getAttribute('data-romaji');
+                const example = this.getAttribute('data-example');
+
+                document.getElementById(isGrammarPage ? 'japanese' : 'japanese').value = japanese;
+                document.getElementById('chinese').value = chinese;
+                if (!isGrammarPage) document.getElementById('romaji').value = romaji;
+                document.getElementById('example').value = example;
+                document.getElementById(isGrammarPage ? 'grammarForm' : 'wordForm').setAttribute('data-edit-id', id);
+            });
+        });
     };
 
     if (notesContainer) {
