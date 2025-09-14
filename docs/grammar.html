@@ -36,7 +36,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">新增文法</h5>
-                <form id="grammarForm" action="/.netlify/functions/grammar" method="POST">
+                <form id="grammarForm" action="/.netlify/functions/grammar" method="POST" enctype="application/x-www-form-urlencoded">
                     <div class="mb-3">
                         <label for="japanese" class="form-label">日文文法</label>
                         <input type="text" class="form-control" id="japanese" name="japanese" placeholder="例：～てしまう" required>

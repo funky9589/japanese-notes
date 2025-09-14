@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <h5 class="card-title">${title}</h5>
                                     <p class="card-text">${subtitle}</p>
                                     ${example ? `<p class="card-text">${example}</p>` : ''}
-                                    ${romaji ? `<p class="card-text">${romaji}</p>` : ''}
+                                    ${romaji ? `<p class="card-text"><strong>羅馬拼音:</strong> ${romaji}</p>` : ''}
                                     ${description ? `<p class="card-text">${description}</p>` : ''}
                                     <button class="btn btn-danger btn-sm delete-btn" data-id="${id}">刪除</button>
                                     <button class="btn btn-primary btn-sm edit-btn" data-id="${id}">編輯</button>
@@ -87,23 +87,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const formId = isUnitPage ? 'unitForm' : path.includes('grammar.html') ? 'grammarForm' : path.includes('Good-for-Nothing.html') ? 'funnyForm' : 'wordForm';
     const form = document.getElementById(formId);
     const formFeedback = document.getElementById('formFeedback');
+    console.log('Form:', form, 'Feedback:', formFeedback); // 調試元素是否存在
     if (form && formFeedback) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
+            console.log('Form data:', data); // 調試提交數據
             try {
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
-                    // 移除 JSON headers，改用 URLSearchParams
                     body: new URLSearchParams(data).toString()
                 });
                 if (!response.ok) throw new Error('提交失敗: ' + response.statusText);
                 const result = await response.json();
+                console.log('Response:', result); // 調試回應
                 if (result.success) {
                     formFeedback.textContent = '提交成功！';
                     formFeedback.className = 'alert alert-success';
-                    loadData(); // 重新載入資料
+                    loadData();
                     form.reset();
                 } else {
                     throw new Error(result.error || '提交失敗');
