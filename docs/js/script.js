@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     }
 
-    // 根據頁面確定 API 路徑
+    // 根據頁面確定 API 路徑和容器
     const path = window.location.pathname;
     const isUnitPage = path.includes('Unit.html');
     const apiEndpoint = isUnitPage ? '/.netlify/functions/unit' : path.includes('grammar.html') ? '/.netlify/functions/grammar' : path.includes('Good-for-Nothing.html') ? '/.netlify/functions/funny' : '/.netlify/functions/words';
@@ -26,25 +26,34 @@ document.addEventListener('DOMContentLoaded', function () {
         ? { title: '標題', subtitle: '連結', description: '描述' } 
         : { title: '日文', subtitle: '中文', example: '例句', romaji: '羅馬拼音' };
 
+    // 動態選擇容器 ID
+    let notesContainerId = '';
+    if (path.includes('word.html')) notesContainerId = 'word-container';
+    else if (path.includes('grammar.html')) notesContainerId = 'grammar-container';
+    else if (path.includes('Good-for-Nothing.html')) notesContainerId = 'funny-container';
+    else if (path.includes('Unit.html')) notesContainerId = 'unit-container';
+    const notesContainer = document.getElementById(notesContainerId);
+
     // 載入資料
-    const notesContainer = document.getElementById('notes-container');
     const loadData = async () => {
         try {
             const response = await fetch(apiEndpoint);
             if (!response.ok) throw new Error('載入失敗: ' + response.statusText);
             const data = await response.json();
+            console.log('Fetched data:', data); // 調試數據
             if (notesContainer) {
                 if (!Array.isArray(data)) {
                     notesContainer.innerHTML = '<p>無數據可用</p>';
                     return;
                 }
                 notesContainer.innerHTML = data.map(item => {
-                    // 安全檢查每個屬性
-                    const title = item[cardLabels.title] || '無標題';
-                    const subtitle = cardLabels.subtitle ? (item[cardLabels.subtitle] || '') : '';
-                    const example = cardLabels.example ? (item[cardLabels.example] || '') : '';
-                    const romaji = cardLabels.romaji ? (item[cardLabels.romaji] || '') : '';
-                    const description = cardLabels.description ? (item[cardLabels.description] || '') : '';
+                    console.log('Item:', item); // 調試單個項
+                    // 安全檢查每個屬性，嘗試多種鍵名
+                    const title = item[cardLabels.title] || item.title || item.japanese || item['日文'] || '無標題';
+                    const subtitle = cardLabels.subtitle ? (item[cardLabels.subtitle] || item.subtitle || item.chinese || item['中文'] || '') : '';
+                    const example = cardLabels.example ? (item[cardLabels.example] || item.example || item['例句'] || '') : '';
+                    const romaji = cardLabels.romaji ? (item[cardLabels.romaji] || item.romaji || item['羅馬拼音'] || '') : '';
+                    const description = cardLabels.description ? (item[cardLabels.description] || item.description || item['說明'] || '') : '';
                     const id = item.id || '';
 
                     return `
