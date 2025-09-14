@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>單元學習 - Japanese Notes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .youon-container { max-width: 100%; }
+        .youon-row { margin: 0 -5px; }
+        .youon-card { margin: 0 5px; }
+    </style>
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Japanese Notes</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" href="50.html">五十音</a></li>
+                    <li class="nav-item"><a class="nav-link" href="unit.html">基本單元</a></li>
+                    <li class="nav-item"><a class="nav-link" href="word.html">單字</a></li>
+                    <li class="nav-item"><a class="nav-link" href="grammar.html">文法</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="Good-for-Nothing.html">小廢物區</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="text-center">單元學習</h1>
+        <div id="countdown" class="text-center mb-4 alert alert-info"></div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <img src="img/keria.jpg" class="img-fluid rounded" alt="單元學習圖片" style="width: 500px; height: auto;">
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="card p-3">
+                    <h3>本色遊戲</h3>
+                    <p>有人可以幫我玩絲綢之歌嗎<br>需要更新什麼再跟我說</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 單元內容按章節收合 -->
+        <div class="accordion" id="unitAccordion">
+            <!-- 第一章：月份 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingMonth">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMonth" aria-expanded="true" aria-controls="collapseMonth">
+                        第一章 - 月份
+                    </button>
+                </h2>
+                <div id="collapseMonth" class="accordion-collapse collapse show" aria-labelledby="headingMonth" data-bs-parent="#unitAccordion">
+                    <div class="accordion-body">
+                        <div class="row row-cols-1 row-cols-md-4 g-3 mb-5">
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">1月</h5><p class="card-text">いちがつ (Ichigatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">2月</h5><p class="card-text">にがつ (Nigatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">3月</h5><p class="card-text">さんがつ (Sangatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">4月</h5><p class="card-text">しがつ (Shigatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">5月</h5><p class="card-text">ごがつ (Gogatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">6月</h5><p class="card-text">ろくがつ (Rokugatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">7月</h5><p class="card-text">しちがつ (Shichigatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">8月</h5><p class="card-text">はちがつ (Hachigatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">9月</h5><p class="card-text">くがつ (Kugatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">10月</h5><p class="card-text">じゅうがつ (Jūgatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">11月</h5><p class="card-text">じゅういちがつ (Jūichigatsu)</p></div></div></div>
+                            <div class="col"><div class="card text-center h-100"><div class="card-body"><h5 class="card-title">12月</h5><p class="card-text">じゅうにがつ (Jūnigatsu)</p></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 未來章節（預留空間） -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingChapter2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChapter2" aria-expanded="false" aria-controls="collapseChapter2">
+                        第二章 - 待定
+                    </button>
+                </h2>
+                <div id="collapseChapter2" class="accordion-collapse collapse" aria-labelledby="headingChapter2" data-bs-parent="#unitAccordion">
+                    <div class="accordion-body">
+                        <p>開放點菜</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 月份選擇器 -->
+        <!-- <div class="text-center mb-4">
+            <select id="monthSelector" class="form-select w-25 mx-auto">
+                <option value="1">1月 - いちがつ</option>
+                <option value="2">2月 - にがつ</option>
+                <option value="3">3月 - さんがつ</option>
+                <option value="4">4月 - しがつ</option>
+                <option value="5">5月 - ごがつ</option>
+                <option value="6">6月 - ろくがつ</option>
+                <option value="7">7月 - しちがつ</option>
+                <option value="8">8月 - はちがつ</option>
+                <option value="9" selected>9月 - くがつ</option>
+                <option value="10">10月 - じゅうがつ</option>
+                <option value="11">11月 - じゅういちがつ</option>
+                <option value="12">12月 - じゅうにがつ</option>
+            </select>
+        </div> -->
+    </div>
+
+    <!-- 頁腳 -->
+    <footer class="bg-dark text-white text-center py-3 mt-4">
+        <p>&copy; 2025 Japanese Notes. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
