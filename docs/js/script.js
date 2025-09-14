@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    // 移除 JSON headers，改用 URLSearchParams
+                    body: new URLSearchParams(data).toString()
                 });
                 if (!response.ok) throw new Error('提交失敗: ' + response.statusText);
                 const result = await response.json();
